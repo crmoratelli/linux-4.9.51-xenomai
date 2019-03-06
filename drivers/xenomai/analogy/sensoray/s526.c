@@ -1,0 +1,1 @@
+/home/crmoratelli/LinuxEmbedded/kernel-xenomai/xenomai/kernel/drivers/analogy/sensoray/s526.c

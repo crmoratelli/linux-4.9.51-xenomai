@@ -1,0 +1,1 @@
+/home/crmoratelli/LinuxEmbedded/kernel-xenomai/xenomai/include/cobalt/kernel/rtdm/analogy/channel_range.h
