@@ -94,6 +94,7 @@ struct spi_slave_bcm2835 {
 	void *io_virt;
 	dma_addr_t io_dma;
 	size_t io_len;
+	size_t io_real_len;
 };
 
 static inline struct spi_slave_bcm2835 *
@@ -310,7 +311,7 @@ static int bcm2835_transfer_iobufs(struct rtdm_spi_remote_slave *slave)
 	if (bcm->io_len == 0)
 		return -EINVAL;	/* No I/O buffers set. */
 	
-	spim->tx_len = bcm->io_len / 2;
+	spim->tx_len = bcm->io_real_len / 2;
 	spim->rx_len = spim->tx_len;
 	spim->tx_buf = bcm->io_virt + spim->rx_len;
 	spim->rx_buf = bcm->io_virt;
@@ -351,6 +352,8 @@ static int set_iobufs(struct spi_slave_bcm2835 *bcm, size_t len)
 
 	if (len == 0)
 		return -EINVAL;
+
+	bcm->io_real_len = len;
 	
 	len = L1_CACHE_ALIGN(len) * 2;
 	if (len == bcm->io_len)
@@ -397,7 +400,7 @@ static int bcm2835_set_iobufs(struct rtdm_spi_remote_slave *slave,
 		return ret;
 
 	p->i_offset = 0;
-	p->o_offset = bcm->io_len / 2;
+	p->o_offset = bcm->io_real_len / 2;
 	p->map_len = bcm->io_len;
 	
 	return 0;
